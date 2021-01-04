@@ -42,7 +42,6 @@ class TACO(BaseDataset):
         )
 
         self.root = root
-
         self.split = list_path
         
         if 'test' in list_path:  # hack :(
