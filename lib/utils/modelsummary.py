@@ -11,7 +11,7 @@ from __future__ import print_function
 
 import os
 import logging
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 
 import torch
 import torch.nn as nn
@@ -67,6 +67,8 @@ def get_model_summary(model, *input_tensors, item_length=26, verbose=False):
                 input = input[0]
             if isinstance(output, list):
                 output = output[0]
+            if isinstance(output, OrderedDict):
+                output = output['out']
 
             summary.append(
                 ModuleDetails(
