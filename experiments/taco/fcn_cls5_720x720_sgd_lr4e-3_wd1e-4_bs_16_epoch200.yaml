@@ -2,11 +2,11 @@ CUDNN:
   BENCHMARK: true
   DETERMINISTIC: false
   ENABLED: true
-GPUS: (0,1,2,3, 4, 5, 6, 7)
+GPUS: (0,1,2,3)
 OUTPUT_DIR: 'output'
 LOG_DIR: 'log'
-WORKERS: 8
-PRINT_FREQ: 70
+WORKERS: 4
+PRINT_FREQ: 50 
 
 DATASET:
   DATASET: taco
@@ -15,7 +15,7 @@ DATASET:
   TRAIN_SET: 'train'
   NUM_CLASSES: 5
 MODEL:
-  NAME: seg_hrnet
+  NAME: seg_fcn
   PRETRAINED: 'pretrained_models/hrnetv2_w48_imagenet_pretrained.pth'
   EXTRA:
     FINAL_CONV_KERNEL: 1

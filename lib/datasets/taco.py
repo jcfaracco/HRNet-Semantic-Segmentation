@@ -11,6 +11,10 @@ import cv2
 
 from .base_dataset import BaseDataset
 
+import imgaug as ia
+import imgaug.augmenters as iaa
+from imgaug.augmentables.segmaps import SegmentationMapsOnImage
+
 
 class TACO(BaseDataset):
     def __init__(self,
@@ -47,7 +51,7 @@ class TACO(BaseDataset):
         if 'test' in list_path:  # hack :(
             list_path = 'test'
 
-        list_path = 'train' # FIXME 
+        # list_path = 'train' # FIXME 
         self.ann_file = ann_file + list_path + '.json'
         
         self.class_map = self._process_csv(class_cfg + str(num_classes - 1) + '.csv')
@@ -60,6 +64,26 @@ class TACO(BaseDataset):
 
         self.coco = coco.COCO(self.ann_file)
         self.ids = list(sorted(self.coco.imgs.keys()))
+
+        # self.aug = None
+        sometimes = lambda aug: iaa.Sometimes(0.5, aug)
+        self.aug = iaa.Sequential([
+            # sometimes(
+            #     iaa.LinearContrast((0.75, 1.5)),
+            # ),
+            iaa.Affine(rotate=(-90, 90),
+                       shear=(-8, 8),
+                       mode='reflect'),
+            # sometimes(
+            #     iaa.GammaContrast((0.5, 2.0)),
+            # ),
+            # sometimes(
+            #     iaa.Emboss(alpha=(0.0, 1.0), strength=(0.5, 1.5)),
+            # ),
+            # sometimes(
+            #     iaa.GaussianBlur(sigma=(0, 0.5)),
+            # ),
+        ], random_order=True)
 
     def __len__(self):
         return len(self.ids)
@@ -125,6 +149,20 @@ class TACO(BaseDataset):
                                 self.multi_scale, self.flip)
                                 
         return image.copy(), label.copy(), np.array(size), name
+
+    def gen_sample(self, image, label, 
+            multi_scale=False, is_flip=True, center_crop_test=False):
+
+        label = self.label_transform(label)
+
+        if self.aug:
+            segmap = SegmentationMapsOnImage(label, shape=image.shape)
+            image, segmap = self.aug(image=image, segmentation_maps=segmap)
+            label = segmap.get_arr()
+
+        image, label = super().gen_sample(image, label)
+
+        return image, label
 
     def get_palette(self, n):
         palette = [0] * (n * 3)
