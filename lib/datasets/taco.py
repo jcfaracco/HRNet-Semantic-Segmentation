@@ -198,7 +198,7 @@ class TACO(BaseDataset):
 
 if __name__ == '__main__':
 
-    taco_dir = "/home/jbragantini/Softwares/TACO"
+    taco_dir = "/TACO"
     taco = TACO(taco_dir + "/data",
                 taco_dir + "/data/annotations.json",
                 taco_dir + "/detector/taco_config/map_4.csv")
