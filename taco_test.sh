@@ -7,7 +7,7 @@ OUTDIR=$3
 
 #    --gpus device=4,5,6,7 \
 docker run \
-    --gpus '"device=4,5,6,7"' \
+    --gpus all \
     --name hrnet --ipc=host -it --rm \
     -v $PWD:/tmp/hrnet \
     -v /data/home/jordao/MO434/TACO:/TACO \
@@ -15,7 +15,7 @@ docker run \
     bash -c "cd hrnet; \
     python3 tools/test.py \
     --cfg $CFG \
-    DATASET.TEST_SET test \
+    DATASET.TEST_SET testval \
     TEST.MODEL_FILE $WEIGHTS \
     OUTPUT_DIR $OUTDIR"
 
