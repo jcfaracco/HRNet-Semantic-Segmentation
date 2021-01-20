@@ -142,6 +142,10 @@ def get_confusion_matrix(label, pred, size, num_class, ignore=-1):
 def adjust_learning_rate(optimizer, base_lr, max_iters, 
         cur_iters, power=0.9):
     lr = base_lr*((1-float(cur_iters)/max_iters)**(power))
-    lr = max(float(1e-6), lr)  # avoiding float overflow
+    if type(lr) is complex:
+        lim = complex(1e-6)
+    else:
+        lim = 1e-6
+    lr = max(lim, lr)  # avoiding float overflow
     optimizer.param_groups[0]['lr'] = lr
     return lr
