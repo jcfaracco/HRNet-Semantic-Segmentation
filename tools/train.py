@@ -210,6 +210,14 @@ def main():
                                 weight_decay=config.TRAIN.WD,
                                 nesterov=config.TRAIN.NESTEROV,
                                 )
+    elif config.TRAIN.OPTIMIZER == 'adam':
+        optimizer = torch.optim.Adam([{'params':
+                                  filter(lambda p: p.requires_grad,
+                                         model.parameters()),
+                                  'lr': config.TRAIN.LR}],
+                                lr=config.TRAIN.LR,
+                                weight_decay=config.TRAIN.WD,
+                                )
     else:
         raise ValueError('Only Support SGD optimizer')
 

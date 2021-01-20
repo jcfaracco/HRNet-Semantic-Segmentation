@@ -68,9 +68,9 @@ class TACO(BaseDataset):
         # self.aug = None
         sometimes = lambda aug: iaa.Sometimes(0.5, aug)
         self.aug = iaa.Sequential([
-            # sometimes(
-            #     iaa.LinearContrast((0.75, 1.5)),
-            # ),
+            sometimes(
+                iaa.LinearContrast((0.75, 1.5)),
+            ),
             iaa.Affine(rotate=(-90, 90),
                        shear=(-8, 8),
                        mode='reflect'),
@@ -80,9 +80,12 @@ class TACO(BaseDataset):
             # sometimes(
             #     iaa.Emboss(alpha=(0.0, 1.0), strength=(0.5, 1.5)),
             # ),
-            # sometimes(
-            #     iaa.GaussianBlur(sigma=(0, 0.5)),
-            # ),
+            sometimes(
+                iaa.Add(value=(-25, 25)),
+            ),
+            sometimes(
+                iaa.GaussianBlur(sigma=(0, 0.5)),
+            ),
         ], random_order=True)
 
     def __len__(self):
