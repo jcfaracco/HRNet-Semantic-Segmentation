@@ -143,7 +143,7 @@ def adjust_learning_rate(optimizer, base_lr, max_iters,
         cur_iters, power=0.9):
     lr = base_lr*((1-float(cur_iters)/max_iters)**(power))
     if type(lr) is complex:
-        lr = float(lr)
+        lr = lr.real
     lr = max(1e-6, lr)  # avoiding float overflow
     optimizer.param_groups[0]['lr'] = lr
     return lr
